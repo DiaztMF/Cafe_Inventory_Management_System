@@ -1,6 +1,6 @@
-# Cafe Management System (POS)
+# Lunar Coffee
 
-Aplikasi Point of Sale (POS) modern untuk manajemen kafe dengan autentikasi, pencarian, pagination, dan CRUD operations lengkap untuk kategori, produk, transaksi, dan detail transaksi.
+Sistem manajemen kafe terintegrasi yang menggabungkan fungsionalitas Point of Sale (POS) internal—mencakup autentikasi, manajemen CRUD, pencarian, dan pagination—dengan landing page eksternal untuk memfasilitasi pemesanan mandiri oleh pelanggan secara langsung.
 
 ---
 
@@ -23,7 +23,7 @@ Aplikasi Point of Sale (POS) modern untuk manajemen kafe dengan autentikasi, pen
 
 ## ✨ Fitur Utama
 
-### Backend (Laravel 13)
+### Backend (Laravel 16)
 - ✅ **Autentikasi & Otorisasi** - Fortify dengan email verification dan 2FA (TOTP)
 - ✅ **REST API Penuh** - GET, POST, PUT, DELETE untuk 4 resource utama
 - ✅ **Type-Safe Routing** - Wayfinder auto-generates typed route functions
