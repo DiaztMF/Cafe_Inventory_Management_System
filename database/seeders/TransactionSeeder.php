@@ -23,7 +23,7 @@ class TransactionSeeder extends Seeder
             [
                 'buyer_name' => 'Budi Santoso',
                 'items' => [
-                    ['product' => 'Latte', 'qty' => 1],
+                    ['product' => 'Lunar Latte', 'qty' => 1],
                     ['product' => 'French Fries', 'qty' => 1],
                     ['product' => 'Mineral Water', 'qty' => 1],
                 ],
@@ -31,8 +31,16 @@ class TransactionSeeder extends Seeder
             [
                 'buyer_name' => 'Siti Aminah',
                 'items' => [
-                    ['product' => 'Espresso', 'qty' => 2],
+                    ['product' => 'Espresso Classico', 'qty' => 2],
                     ['product' => 'Chocolate Milk', 'qty' => 1],
+                ],
+            ],
+            [
+                'buyer_name' => 'Customer Demo',
+                'items' => [
+                    ['product' => 'Matcha Serenity', 'qty' => 1],
+                    ['product' => 'Affogato Bliss', 'qty' => 1],
+                    ['product' => 'Croissant', 'qty' => 2],
                 ],
             ],
         ];

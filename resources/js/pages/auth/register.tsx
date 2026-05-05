@@ -1,7 +1,9 @@
 import { Form, Head } from '@inertiajs/react';
+import { CircleAlert } from 'lucide-react';
 import InputError from '@/components/input-error';
 import PasswordInput from '@/components/password-input';
 import TextLink from '@/components/text-link';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,6 +23,15 @@ export default function Register() {
             >
                 {({ processing, errors }) => (
                     <>
+                        {Object.keys(errors).length > 0 && (
+                            <Alert variant="destructive" className="border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-950">
+                                <CircleAlert className="size-4" />
+                                <AlertDescription>
+                                    {Object.values(errors).filter(Boolean).join(' ')}
+                                </AlertDescription>
+                            </Alert>
+                        )}
+
                         <div className="grid gap-6">
                             <div className="grid gap-2">
                                 <Label htmlFor="name">Name</Label>

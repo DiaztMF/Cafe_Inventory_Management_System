@@ -14,28 +14,49 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         $products = [
+            // Coffee
             [
                 'category' => 'Coffee',
-                'name' => 'Espresso',
-                'price' => 18000,
+                'name' => 'Espresso Classico',
+                'price' => 28000,
                 'stock' => 60,
             ],
             [
                 'category' => 'Coffee',
-                'name' => 'Cappuccino',
-                'price' => 25000,
+                'name' => 'Lunar Latte',
+                'price' => 38000,
+                'stock' => 50,
+            ],
+            [
+                'category' => 'Coffee',
+                'name' => 'Caramel Macchiato',
+                'price' => 40000,
                 'stock' => 45,
             ],
             [
                 'category' => 'Coffee',
-                'name' => 'Latte',
-                'price' => 28000,
-                'stock' => 50,
+                'name' => 'Cold Brew Tonic',
+                'price' => 35000,
+                'stock' => 40,
+            ],
+            [
+                'category' => 'Coffee',
+                'name' => 'Cappuccino',
+                'price' => 32000,
+                'stock' => 55,
+            ],
+
+            // Non Coffee
+            [
+                'category' => 'Non Coffee',
+                'name' => 'Matcha Serenity',
+                'price' => 42000,
+                'stock' => 35,
             ],
             [
                 'category' => 'Non Coffee',
                 'name' => 'Chocolate Milk',
-                'price' => 22000,
+                'price' => 28000,
                 'stock' => 40,
             ],
             [
@@ -44,6 +65,8 @@ class ProductSeeder extends Seeder
                 'price' => 8000,
                 'stock' => 80,
             ],
+
+            // Snack
             [
                 'category' => 'Snack',
                 'name' => 'French Fries',
@@ -55,6 +78,14 @@ class ProductSeeder extends Seeder
                 'name' => 'Croissant',
                 'price' => 20000,
                 'stock' => 30,
+            ],
+
+            // Dessert
+            [
+                'category' => 'Dessert',
+                'name' => 'Affogato Bliss',
+                'price' => 45000,
+                'stock' => 25,
             ],
             [
                 'category' => 'Dessert',

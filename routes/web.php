@@ -1,17 +1,35 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TransactionDetailController;
+use App\Models\Product;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+use Laravel\Fortify\Features;
 
-Route::inertia('/', 'welcome', [
-    'canRegister' => Features::enabled(Features::registration()),
-])->name('home');
+Route::get('/', function () {
+    $products = Product::query()
+        ->with('category')
+        ->where('stock', '>', 0)
+        ->latest()
+        ->get();
 
-Route::middleware(['auth', 'verified'])->group(function () {
+    return Inertia::render('welcome', [
+        'canRegister' => Features::enabled(Features::registration()),
+        'products' => $products,
+    ]);
+})->name('home');
+
+Route::get('/api/menu', [OrderController::class, 'menu'])->name('menu');
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+});
+
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
     Route::inertia('categories-page', 'categories/index')->name('categories.page');
     Route::inertia('products-page', 'products/index')->name('products.page');

@@ -17,12 +17,21 @@ class UserSeeder extends Seeder
             'name' => 'Admin Cafe',
             'email' => 'admin@cafe.test',
             'password' => Hash::make('password'),
+            'role' => 'admin',
         ]);
 
         User::create([
             'name' => 'Kasir Utama',
             'email' => 'kasir@cafe.test',
             'password' => Hash::make('password'),
+            'role' => 'admin',
+        ]);
+
+        User::create([
+            'name' => 'Customer Demo',
+            'email' => 'customer@cafe.test',
+            'password' => Hash::make('password'),
+            'role' => 'customer',
         ]);
     }
 }
