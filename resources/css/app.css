@@ -9,9 +9,25 @@
 
 @theme {
     --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Be Vietnam Pro', 'Instrument Sans', ui-sans-serif, system-ui,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
+    --font-serif: 'Noto Serif', Georgia, 'Times New Roman', serif;
+
+    /* Lunar Coffee Design Tokens */
+    --color-lunar-deep-roast: #3e2723;
+    --color-lunar-deep-roast-light: #5d4037;
+    --color-lunar-warm-latte: #d7ccc8;
+    --color-lunar-warm-latte-light: #efebe9;
+    --color-lunar-fresh-mint: #b2dfdb;
+    --color-lunar-fresh-mint-dark: #80cbc4;
+    --color-lunar-creamy-white: #fafafa;
+    --color-lunar-dark-espresso: #212121;
+    --color-lunar-brown-muted: #8d6e63;
+    --color-lunar-brown-soft: #a1887f;
+    --color-lunar-mint-deep: #004d40;
+    --color-lunar-gold: #f9a825;
+    --color-lunar-footer-bg: #2c1a15;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -98,7 +114,7 @@
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
+    --background: oklch(0% 0 0);
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.145 0 0);
     --card-foreground: oklch(0.985 0 0);
@@ -132,6 +148,30 @@
     --sidebar-ring: oklch(0.439 0 0);
 }
 
+/* Force landing page to always use light mode colors */
+.dark .landing-light {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.577 0.245 27.325);
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.87 0 0);
+    color-scheme: light;
+}
+
 @layer base {
     * {
         @apply border-border;
@@ -140,4 +180,17 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+/* Lunar Coffee fade-in animation */
+.lunar-fade-in {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.lunar-fade-in.lunar-visible {
+    opacity: 1;
+    transform: translateY(0);
 }
