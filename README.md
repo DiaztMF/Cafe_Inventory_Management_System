@@ -23,15 +23,17 @@ Sistem manajemen kafe terintegrasi yang menggabungkan fungsionalitas Point of Sa
 
 ## ✨ Fitur Utama
 
-### Backend (Laravel 16)
-- ✅ **Autentikasi & Otorisasi** - Fortify dengan email verification dan 2FA (TOTP)
-- ✅ **REST API Penuh** - GET, POST, PUT, DELETE untuk 4 resource utama
+### Backend (Laravel 13)
+
+- ✅ **Autentikasi & Otorisasi RBAC** - Fortify dengan email verification, 2FA (TOTP), dan Role-Based Access (Admin vs Customer)
+- ✅ **REST API Penuh** - GET, POST, PUT, DELETE untuk resource utama
 - ✅ **Type-Safe Routing** - Wayfinder auto-generates typed route functions
 - ✅ **CSRF Protection** - Token CSRF otomatis di header request
 - ✅ **Eloquent ORM** - Model dengan relationships (hasMany, belongsTo)
-- ✅ **Database Migrations** - Schema POS dengan tabel users, categories, products, transactions, transaction_details
+- ✅ **Database Migrations** - Schema POS dengan SQLite sebagai default database
 
 ### Frontend (React 19 + TypeScript)
+
 - ✅ **Modern UI** - shadcn/ui components (Card, Dialog, Table, Input, Button, Select, Badge, Alert)
 - ✅ **4 Halaman CRUD Terpisah** - Categories, Products, Transactions, Transaction Details
 - ✅ **Dashboard Terpadu** - Menampilkan ringkasan semua data dengan metric cards
@@ -42,6 +44,7 @@ Sistem manajemen kafe terintegrasi yang menggabungkan fungsionalitas Point of Sa
 - ✅ **Responsive Design** - Tailwind CSS dengan mobile-first approach
 
 ### Security
+
 - ✅ Authenticated routes middleware
 - ✅ Verified email middleware
 - ✅ CSRF token validation
@@ -53,28 +56,31 @@ Sistem manajemen kafe terintegrasi yang menggabungkan fungsionalitas Point of Sa
 ## 🛠️ Tech Stack
 
 ### Backend
-| Technology | Version | Penggunaan |
-|-----------|---------|-----------|
-| PHP | 8.3+ | Server language |
-| Laravel | 13.0 | Web framework |
-| Laravel Fortify | 1.34 | Authentication |
-| Laravel Wayfinder | 0.1.14 | Type-safe routing |
-| MySQL | 5.7+ | Database (configurable) |
-| Pest | 4.4 | Testing framework |
+
+| Technology        | Version  | Penggunaan                |
+| ----------------- | -------- | ------------------------- |
+| PHP               | 8.3+     | Server language           |
+| Laravel           | 13.0     | Web framework             |
+| Laravel Fortify   | 1.34     | Authentication            |
+| Laravel Wayfinder | 0.1.14   | Type-safe routing         |
+| SQLite / MySQL    | - / 5.7+ | Database (SQLite default) |
+| Pest              | 4.4      | Testing framework         |
 
 ### Frontend
-| Technology | Version | Penggunaan |
-|-----------|---------|-----------|
-| React | 19.2 | UI library |
-| TypeScript | 5.7 | Type safety |
-| Inertia.js | 3.0 | Server-driven components |
-| Tailwind CSS | 4.0 | Styling |
-| shadcn/ui | Latest | Component library |
-| Vite | 8.0 | Build tool |
-| ESLint | 9.17 | Linting |
-| Prettier | 3.4 | Code formatting |
+
+| Technology   | Version | Penggunaan               |
+| ------------ | ------- | ------------------------ |
+| React        | 19.2    | UI library               |
+| TypeScript   | 5.7     | Type safety              |
+| Inertia.js   | 3.0     | Server-driven components |
+| Tailwind CSS | 4.0     | Styling                  |
+| shadcn/ui    | Latest  | Component library        |
+| Vite         | 8.0     | Build tool               |
+| ESLint       | 9.17    | Linting                  |
+| Prettier     | 3.4     | Code formatting          |
 
 ### Tools
+
 - **Node.js**: Package management frontend
 - **Composer**: Package management backend
 - **Vite**: Development & production build bundler
@@ -87,7 +93,7 @@ Sistem manajemen kafe terintegrasi yang menggabungkan fungsionalitas Point of Sa
 - PHP 8.3 atau lebih tinggi
 - Composer 2.x
 - Node.js 18+ & npm 9+
-- MySQL 5.7+ (atau gunakan SQLite untuk development)
+- SQLite (Default) atau MySQL 5.7+
 - Git
 
 ---
@@ -95,12 +101,14 @@ Sistem manajemen kafe terintegrasi yang menggabungkan fungsionalitas Point of Sa
 ## 🚀 Instalasi
 
 ### 1. Clone Repository
+
 ```bash
 git clone <repository-url>
 cd cafe-management-system
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 # Backend
 composer install
@@ -110,6 +118,7 @@ npm install
 ```
 
 ### 3. Setup Environment
+
 ```bash
 # Copy .env.example ke .env
 cp .env.example .env
@@ -119,27 +128,28 @@ php artisan key:generate
 ```
 
 ### 4. Konfigurasi Database
-Edit `.env` dan sesuaikan sesuai database Anda:
+
+Project ini menggunakan SQLite secara default. Edit `.env` jika ingin menggunakan database lain, atau biarkan default untuk SQLite:
+
 ```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=cafe_management_system
-DB_USERNAME=root
-DB_PASSWORD=
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
 ```
 
 ### 5. Run Migrations
+
 ```bash
 php artisan migrate
 ```
 
 ### 6. Build Assets
+
 ```bash
 npm run build
 ```
 
 ### 7. Start Development
+
 ```bash
 # Option 1: Jalankan server & build terpisah
 php artisan serve          # Terminal 1: Server Laravel
@@ -158,58 +168,72 @@ Aplikasi akan tersedia di `http://localhost:8000`
 ### Struktur Tabel
 
 #### `users`
-| Column | Type | Notes |
-|--------|------|-------|
-| id | bigint | Primary key |
-| name | string | Nama user |
-| email | string | Email unik |
-| email_verified_at | timestamp | Verifikasi email |
-| password | string | Hashed password |
-| two_factor_secret | string | 2FA secret |
-| two_factor_recovery_codes | string | 2FA recovery codes |
-| remember_token | string | Remember me token |
+
+| Column                    | Type      | Notes                               |
+| ------------------------- | --------- | ----------------------------------- |
+| id                        | bigint    | Primary key                         |
+| name                      | string    | Nama user                           |
+| email                     | string    | Email unik                          |
+| email_verified_at         | timestamp | Verifikasi email                    |
+| password                  | string    | Hashed password                     |
+| role                      | string    | Role user ('admin' atau 'customer') |
+| two_factor_secret         | string    | 2FA secret                          |
+| two_factor_recovery_codes | string    | 2FA recovery codes                  |
+| remember_token            | string    | Remember me token                   |
 
 #### `categories`
-| Column | Type | Notes |
-|--------|------|-------|
-| id | bigint | Primary key |
-| name | string | Nama kategori (unique) |
-| description | text | Deskripsi |
-| created_at/updated_at | timestamp | Timestamps |
+
+| Column                | Type      | Notes                  |
+| --------------------- | --------- | ---------------------- |
+| id                    | bigint    | Primary key            |
+| name                  | string    | Nama kategori (unique) |
+| description           | text      | Deskripsi              |
+| created_at/updated_at | timestamp | Timestamps             |
 
 #### `products`
-| Column | Type | Notes |
-|--------|------|-------|
-| id | bigint | Primary key |
-| category_id | bigint | Foreign key kategori |
-| name | string | Nama produk |
-| price | decimal | Harga |
-| stock | integer | Jumlah stok |
-| created_at/updated_at | timestamp | Timestamps |
+
+| Column                | Type      | Notes                |
+| --------------------- | --------- | -------------------- |
+| id                    | bigint    | Primary key          |
+| category_id           | bigint    | Foreign key kategori |
+| name                  | string    | Nama produk          |
+| price                 | decimal   | Harga                |
+| stock                 | integer   | Jumlah stok          |
+| created_at/updated_at | timestamp | Timestamps           |
 
 #### `transactions`
-| Column | Type | Notes |
-|--------|------|-------|
-| id | bigint | Primary key |
-| total_price | decimal | Total harga transaksi |
-| buyer_name | string | Nama pembeli |
-| cashier_id | bigint | Foreign key user (nullable) |
-| created_at/updated_at | timestamp | Timestamps |
+
+| Column                | Type      | Notes                       |
+| --------------------- | --------- | --------------------------- |
+| id                    | bigint    | Primary key                 |
+| total_price           | decimal   | Total harga transaksi       |
+| buyer_name            | string    | Nama pembeli                |
+| cashier_id            | bigint    | Foreign key user (nullable) |
+| created_at/updated_at | timestamp | Timestamps                  |
 
 #### `transaction_details`
-| Column | Type | Notes |
-|--------|------|-------|
-| id | bigint | Primary key |
-| transaction_id | bigint | Foreign key transaksi |
-| product_id | bigint | Foreign key produk |
-| qty | integer | Jumlah |
-| created_at/updated_at | timestamp | Timestamps |
+
+| Column                | Type      | Notes                 |
+| --------------------- | --------- | --------------------- |
+| id                    | bigint    | Primary key           |
+| transaction_id        | bigint    | Foreign key transaksi |
+| product_id            | bigint    | Foreign key produk    |
+| qty                   | integer   | Jumlah                |
+| created_at/updated_at | timestamp | Timestamps            |
 
 ---
 
 ## 🔌 API Endpoints
 
+### Orders (Customer)
+
+```
+GET    /api/menu           - Fetch daftar menu untuk landing page
+POST   /orders             - Submit order baru (Authenticated Customer)
+```
+
 ### Authentication (Fortify)
+
 ```
 POST   /login              - Login
 POST   /logout             - Logout
@@ -220,7 +244,8 @@ POST   /email/verification-notification - Resend verification
 POST   /two-factor-authentication - Setup 2FA
 ```
 
-### Categories
+### Categories [Admin Only]
+
 ```
 GET    /categories         - List semua kategori
 POST   /categories         - Create kategori baru
@@ -229,7 +254,8 @@ PUT    /categories/{id}    - Update kategori
 DELETE /categories/{id}    - Delete kategori
 ```
 
-### Products
+### Products [Admin Only]
+
 ```
 GET    /products           - List semua produk (dengan relasi kategori)
 POST   /products           - Create produk baru
@@ -238,7 +264,8 @@ PUT    /products/{id}      - Update produk
 DELETE /products/{id}      - Delete produk
 ```
 
-### Transactions
+### Transactions [Admin Only]
+
 ```
 GET    /transactions       - List semua transaksi (dengan relasi cashier & details)
 POST   /transactions       - Create transaksi baru
@@ -247,7 +274,8 @@ PUT    /transactions/{id}  - Update transaksi
 DELETE /transactions/{id}  - Delete transaksi
 ```
 
-### Transaction Details
+### Transaction Details [Admin Only]
+
 ```
 GET    /transaction-details          - List detail transaksi (dengan relasi product)
 POST   /transaction-details          - Create detail baru
@@ -257,12 +285,13 @@ DELETE /transaction-details/{id}     - Delete detail
 ```
 
 **Response Format:**
+
 ```json
 {
-  "id": 1,
-  "name": "Kategori Minuman",
-  "description": "Berbagai minuman",
-  "created_at": "2026-04-09T10:30:00Z"
+    "id": 1,
+    "name": "Kategori Minuman",
+    "description": "Berbagai minuman",
+    "created_at": "2026-04-09T10:30:00Z"
 }
 ```
 
@@ -271,10 +300,14 @@ DELETE /transaction-details/{id}     - Delete detail
 ## 📄 Halaman & Fitur Frontend
 
 ### 1. **Welcome Page** (`/`)
-- Landing page publik
+
+- Landing page publik Lunar Coffee dengan custom branding & animasi
+- Menampilkan produk terbaru / featured drinks
+- Integrasi menu dan keranjang belanja untuk pemesanan mandiri oleh Customer
 - Link ke login/register
 
-### 2. **Dashboard** (`/dashboard`)
+### 2. **Dashboard** (`/dashboard`) [Admin Only]
+
 - Ringkasan metric: total kategori, produk, transaksi, omzet
 - Tabel kategori dengan search & pagination
 - Tabel produk dengan relasi kategori
@@ -282,47 +315,52 @@ DELETE /transaction-details/{id}     - Delete detail
 - Tabel detail transaksi dengan subtotal
 - Empty states dan loading skeletons
 
-### 3. **Categories Page** (`/categories-page`)
+### 3. **Categories Page** (`/categories-page`) [Admin Only]
+
 - Tabel daftar kategori lengkap
 - **CRUD Operations:**
-  - Create: Dialog form dengan field name & description
-  - Read: Display daftar dengan pagination
-  - Update: Edit form via dialog
-  - Delete: Konfirmasi delete
+    - Create: Dialog form dengan field name & description
+    - Read: Display daftar dengan pagination
+    - Update: Edit form via dialog
+    - Delete: Konfirmasi delete
 - Search by nama/deskripsi/id
 - Pagination 6 baris per halaman
 
-### 4. **Products Page** (`/products-page`)
+### 4. **Products Page** (`/products-page`) [Admin Only]
+
 - Tabel daftar produk dengan kolom: ID, nama, kategori, harga, stok
 - **CRUD Operations:**
-  - Create: Form dengan category select, nama, harga, stok
-  - Read: Display dengan loading skeleton
-  - Update: Edit form via dialog
-  - Delete: Konfirmasi delete
+    - Create: Form dengan category select, nama, harga, stok
+    - Read: Display dengan loading skeleton
+    - Update: Edit form via dialog
+    - Delete: Konfirmasi delete
 - Search by nama/kategori/id
 - Pagination 6 baris per halaman
 
-### 5. **Transactions Page** (`/transactions-page`)
+### 5. **Transactions Page** (`/transactions-page`) [Admin Only]
+
 - Tabel transaksi dengan kolom: ID, pembeli, kasir, jumlah item, total harga
 - **CRUD Operations:**
-  - Create: Form untuk nama pembeli, total harga, cashier ID (opsional)
-  - Read: Display dengan loading states
-  - Update: Edit form via dialog
-  - Delete: Konfirmasi delete
+    - Create: Form untuk nama pembeli, total harga, cashier ID (opsional)
+    - Read: Display dengan loading states
+    - Update: Edit form via dialog
+    - Delete: Konfirmasi delete
 - Search by ID/pembeli/kasir
 - Pagination 6 baris per halaman
 
-### 6. **Transaction Details Page** (`/transaction-details-page`)
+### 6. **Transaction Details Page** (`/transaction-details-page`) [Admin Only]
+
 - Tabel detail transaksi dengan kolom: ID, transaction ID, produk, qty, subtotal
 - **CRUD Operations:**
-  - Create: Form dengan transaction select, product select, qty select (1-20)
-  - Read: Display item per transaksi
-  - Update: Edit form via dialog
-  - Delete: Konfirmasi delete
+    - Create: Form dengan transaction select, product select, qty select (1-20)
+    - Read: Display item per transaksi
+    - Update: Edit form via dialog
+    - Delete: Konfirmasi delete
 - Search by ID detail/ID transaksi/nama produk
 - Pagination 6 baris per halaman
 
 ### 7. **Auth Pages**
+
 - Login page dengan email/password
 - Register page dengan validasi
 - Forgot password flow
@@ -332,6 +370,7 @@ DELETE /transaction-details/{id}     - Delete detail
 - Password update page
 
 ### 8. **Settings Pages**
+
 - Profile update (nama, email)
 - Password change
 - Appearance settings (light/dark mode)
@@ -341,6 +380,7 @@ DELETE /transaction-details/{id}     - Delete detail
 ## 🔐 Authentication
 
 ### Features
+
 - **Email/Password Login** - Fortify authentication
 - **Email Verification** - Required sebelum akses routes auth
 - **Remember Me** - Optional cookie-based persistence
@@ -350,12 +390,16 @@ DELETE /transaction-details/{id}     - Delete detail
 - **Password Change** - Confirm password sebelum update
 
 ### Middleware
+
 - `auth` - Require login
 - `verified` - Require email verification
+- `admin` - Require admin role (Role-Based Access Control)
 - `throttle` - Rate limiting (contoh: 6 attempts per 1 minute untuk password reset)
 
 ### Fortify Configuration
+
 File: `config/fortify.php`
+
 - Login path: `/login`
 - Home path: `/dashboard`
 - Password validation rules dari `app/Concerns/PasswordValidationRules.php`
@@ -367,6 +411,7 @@ File: `config/fortify.php`
 ### CLI Commands
 
 #### Development Server
+
 ```bash
 # Start Laravel development server
 php artisan serve
@@ -379,6 +424,7 @@ composer run dev
 ```
 
 #### Build
+
 ```bash
 # Production build
 npm run build
@@ -388,6 +434,7 @@ npm run build:ssr
 ```
 
 #### Code Quality
+
 ```bash
 # Lint fixed
 npm run lint
@@ -404,6 +451,7 @@ npm run types:check && npm run lint:check && npm run format:check && npm run typ
 ```
 
 #### Database
+
 ```bash
 # Run migrations
 php artisan migrate
@@ -419,6 +467,7 @@ php artisan db:seed
 ```
 
 #### Wayfinder (Route generation)
+
 ```bash
 # Generate typed route functions
 php artisan wayfinder:generate --no-interaction
@@ -432,6 +481,7 @@ php artisan wayfinder:generate --with-form --no-interaction
 ## 🧪 Testing
 
 ### Run Tests
+
 ```bash
 # Run all tests
 php artisan test
@@ -444,6 +494,7 @@ php artisan test --coverage
 ```
 
 ### Test Framework
+
 - **Pest 4.4** - Modern PHP testing framework
 - Feature tests di `tests/Feature/`
 - Unit tests di `tests/Unit/`
@@ -559,6 +610,8 @@ cafe-management-system/
 ├── public/
 ├── vendor/
 ├── node_modules/
+├── .agents/              # Agent skills (design-md, enhance-prompt)
+├── DESIGN.md             # Design system documentation
 ├── .env.example
 ├── artisan
 ├── composer.json
@@ -576,46 +629,47 @@ cafe-management-system/
 ## 🔗 Key Features Explained
 
 ### 1. Wayfinder Type-Safe Routing
+
 ```typescript
 // Auto-generated di resources/js/routes/
 import { index, store, update, destroy } from '@/routes/categories';
 
 // Usage dalam component
-const url = index.url();              // '/categories'
-const createUrl = store.url();        // '/categories'
+const url = index.url(); // '/categories'
+const createUrl = store.url(); // '/categories'
 const updateUrl = update.url({ id }); // '/categories/{id}'
 ```
 
 ### 2. API Client dengan CSRF
+
 ```typescript
 // resources/js/lib/api-client.ts
 import { apiRequest } from '@/lib/api-client';
 
 const data = await apiRequest<Category[]>(index.url()); // GET
-await apiRequest(store.url(), 'POST', payload);        // POST
-await apiRequest(update.url(id), 'PUT', payload);      // PUT
-await apiRequest(destroy.url(id), 'DELETE');           // DELETE
+await apiRequest(store.url(), 'POST', payload); // POST
+await apiRequest(update.url(id), 'PUT', payload); // PUT
+await apiRequest(destroy.url(id), 'DELETE'); // DELETE
 ```
 
 ### 3. Component & Pagination
+
 ```typescript
 // Tabel dengan search & pagination
 const [search, setSearch] = useState('');
 const [page, setPage] = useState(1);
 
 const filtered = useMemo(() => {
-  return rows.filter(row => 
-    row.name.toLowerCase().includes(search.toLowerCase())
-  );
+    return rows.filter((row) =>
+        row.name.toLowerCase().includes(search.toLowerCase()),
+    );
 }, [rows, search]);
 
-const paginated = filtered.slice(
-  (page - 1) * PAGE_SIZE,
-  page * PAGE_SIZE
-);
+const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 ```
 
 ### 4. Dialog Form untuk CRUD
+
 ```typescript
 <Dialog open={isOpen} onOpenChange={setIsOpen}>
   <DialogContent>
@@ -638,26 +692,34 @@ const paginated = filtered.slice(
 ## 🐛 Troubleshooting
 
 ### Frontend Asset Changes Not Reflected
+
 **Solution:** Jalankan `npm run build` atau `npm run dev` untuk rebuild assets.
 
 ### Database Connection Error
-**Solution:** 
-1. Cek `.env` - sesuaikan DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD
-2. Pastikan MySQL/Database service running
+
+**Solution:**
+
+1. Jika menggunakan default (SQLite), pastikan file `database/database.sqlite` ada dan memiliki permission yang benar.
+2. Jika menggunakan MySQL, cek `.env` dan pastikan service MySQL berjalan.
 3. Run `php artisan migrate` untuk membuat tabel
 
 ### CSRF Token Error pada Request
+
 **Solution:**
+
 - Pastikan `<meta name="csrf-token" content="{{ csrf_token() }}">` ada di `app.blade.php`
 - Pastikan `apiRequest()` function sudah dipanggil untuk non-GET requests
 
 ### Wayfinder Routes Not Generated
+
 **Solution:** Run `php artisan wayfinder:generate --no-interaction` untuk regenerate routes.
 
 ### 2FA Not Working
+
 **Solution:** Pastikan kolom `two_factor_secret` dan `two_factor_recovery_codes` sudah di database (cek migration 2FA).
 
 ### Port 8000 Already in Use
+
 **Solution:** `php artisan serve --port=8001` atau gunakan port lain.
 
 ---
@@ -686,6 +748,6 @@ MIT License - Bebas digunakan untuk development dan commercial.
 
 ---
 
-**Last Updated:** April 10, 2026  
-**Version:** 1.0.0  
+**Last Updated:** May 5, 2026  
+**Version:** 1.1.0  
 **Status:** Production Ready
