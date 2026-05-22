@@ -59,6 +59,8 @@ type Transaction = {
     total_price: number;
     buyer_name: string;
     cashier_id: number | null;
+    status: string;
+    payment_method: string | null;
     created_at: string;
     cashier?: Cashier | null;
     details?: TransactionDetail[];
@@ -567,6 +569,8 @@ export function PosDataHub() {
                                 <TableHead>ID</TableHead>
                                 <TableHead>Pembeli</TableHead>
                                 <TableHead>Kasir</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Metode</TableHead>
                                 <TableHead>Jumlah Item</TableHead>
                                 <TableHead>Total Harga</TableHead>
                                 <TableHead>Dibuat</TableHead>
@@ -581,6 +585,12 @@ export function PosDataHub() {
                                         <TableCell>#{transaction.id}</TableCell>
                                         <TableCell className="font-medium">{transaction.buyer_name}</TableCell>
                                         <TableCell>{transaction.cashier?.name ?? 'Belum ditentukan'}</TableCell>
+                                        <TableCell>
+                                            <Badge variant={transaction.status === 'completed' ? 'default' : transaction.status === 'cancelled' ? 'destructive' : 'secondary'}>
+                                                {transaction.status}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell>{transaction.payment_method ?? '-'}</TableCell>
                                         <TableCell>{totalQty}</TableCell>
                                         <TableCell>{formatCurrency(transaction.total_price)}</TableCell>
                                         <TableCell>{formatDate(transaction.created_at)}</TableCell>
@@ -589,7 +599,7 @@ export function PosDataHub() {
                             })}
                             {paginatedTransactions.rows.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={6} className="text-muted-foreground py-6 text-center">
+                                    <TableCell colSpan={8} className="text-muted-foreground py-6 text-center">
                                         Tidak ada transaksi yang cocok.
                                     </TableCell>
                                 </TableRow>

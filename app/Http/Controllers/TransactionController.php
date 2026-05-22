@@ -11,7 +11,7 @@ class TransactionController extends Controller
     public function index(): JsonResponse
     {
         $transactions = Transaction::query()
-            ->with(['cashier', 'details.product'])
+            ->with(['cashier', 'user', 'details.product'])
             ->latest()
             ->get();
 
@@ -33,7 +33,7 @@ class TransactionController extends Controller
 
     public function show(Transaction $transaction): JsonResponse
     {
-        return response()->json($transaction->load(['cashier', 'details.product']));
+        return response()->json($transaction->load(['cashier', 'user', 'details.product']));
     }
 
     public function update(Request $request, Transaction $transaction): JsonResponse
@@ -54,5 +54,38 @@ class TransactionController extends Controller
         $transaction->delete();
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * Update order status from admin dashboard.
+     */
+    public function updateStatus(Request $request, Transaction $transaction): JsonResponse
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'string', 'in:pending,waiting_payment,paid,processing,completed,cancelled'],
+        ]);
+
+        $previousStatus = $transaction->status;
+        $newStatus = $validated['status'];
+
+        $transaction->update([
+            'status' => $newStatus,
+        ]);
+
+        // If marking as paid (cash payment confirmed by admin)
+        if ($newStatus === Transaction::STATUS_PAID && $previousStatus !== Transaction::STATUS_PAID) {
+            $transaction->update([
+                'paid_at' => now(),
+            ]);
+        }
+
+        // Restore stock if cancelled
+        if ($newStatus === Transaction::STATUS_CANCELLED && $previousStatus !== Transaction::STATUS_CANCELLED) {
+            foreach ($transaction->details as $detail) {
+                $detail->product->increment('stock', $detail->qty);
+            }
+        }
+
+        return response()->json($transaction->fresh()->load(['cashier', 'user', 'details.product']));
     }
 }

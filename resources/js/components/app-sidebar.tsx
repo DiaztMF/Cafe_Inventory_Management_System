@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Boxes, LayoutGrid, ReceiptText, Shapes, ShoppingBasket } from 'lucide-react';
+import { Boxes, LayoutGrid, Package, ReceiptText, Shapes, ShoppingBasket } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -20,6 +20,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Pesanan',
+        href: '/orders-page',
+        icon: Package,
     },
     {
         title: 'Kategori',

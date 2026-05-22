@@ -25,6 +25,8 @@ type Transaction = {
     total_price: number;
     buyer_name: string;
     cashier_id: number | null;
+    status: string;
+    payment_method: string | null;
     created_at: string;
 };
 
@@ -178,6 +180,8 @@ export default function TransactionsPage() {
                                         <TableHead>ID</TableHead>
                                         <TableHead>Nama Pembeli</TableHead>
                                         <TableHead>Total Harga</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Metode</TableHead>
                                         <TableHead>Cashier ID</TableHead>
                                         <TableHead>Dibuat</TableHead>
                                         <TableHead className="text-right">Aksi</TableHead>
@@ -189,6 +193,18 @@ export default function TransactionsPage() {
                                             <TableCell>#{row.id}</TableCell>
                                             <TableCell className="font-medium">{row.buyer_name}</TableCell>
                                             <TableCell>{formatCurrency(row.total_price)}</TableCell>
+                                            <TableCell>
+                                                <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                                    row.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                                    row.status === 'paid' ? 'bg-emerald-100 text-emerald-800' :
+                                                    row.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                                                    row.status === 'processing' ? 'bg-indigo-100 text-indigo-800' :
+                                                    'bg-yellow-100 text-yellow-800'
+                                                }`}>
+                                                    {row.status}
+                                                </span>
+                                            </TableCell>
+                                            <TableCell>{row.payment_method ?? '-'}</TableCell>
                                             <TableCell>{row.cashier_id ?? '-'}</TableCell>
                                             <TableCell>{formatDate(row.created_at)}</TableCell>
                                             <TableCell className="text-right">
@@ -211,7 +227,7 @@ export default function TransactionsPage() {
                                     ))}
                                     {rows.length === 0 && (
                                         <TableRow>
-                                            <TableCell colSpan={6} className="text-muted-foreground py-8 text-center">
+                                            <TableCell colSpan={8} className="text-muted-foreground py-8 text-center">
                                                 Belum ada transaksi.
                                             </TableCell>
                                         </TableRow>

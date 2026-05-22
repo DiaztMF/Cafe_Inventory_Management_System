@@ -1,5 +1,5 @@
 import { Head, Link, usePage, router } from '@inertiajs/react';
-import { dashboard, login, register } from '@/routes';
+import { dashboard, login, register, logout } from '@/routes';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -103,14 +103,13 @@ export default function Welcome({ canRegister = true, products = [] }: { canRegi
         setOrderLoading(true);
         setOrderError('');
         try {
-            await apiRequest('/orders', 'POST', {
+            const result = await apiRequest<{ id: number }>('/orders', 'POST', {
                 items: cart.map(i => ({ product_id: i.product.id, qty: i.qty })),
             });
             setCart([]);
             setCartOpen(false);
-            setOrderSuccess(true);
-            setTimeout(() => setOrderSuccess(false), 5000);
-            router.reload({ only: ['products'] });
+            // Redirect to checkout page
+            router.visit(`/checkout/${result.id}`);
         } catch (err) {
             setOrderError(err instanceof Error ? err.message : 'Order failed');
         } finally {
@@ -156,12 +155,18 @@ export default function Welcome({ canRegister = true, products = [] }: { canRegi
                                 </button>
                             )}
                             {isAdmin ? (
-                                <Button asChild className="bg-lunar-deep-roast hover:bg-lunar-deep-roast-light"><Link href={dashboard()}>Dashboard</Link></Button>
+                                <div className="flex items-center gap-2">
+                                    <Button asChild className="bg-lunar-deep-roast hover:bg-lunar-deep-roast-light"><Link href={dashboard()}>Dashboard</Link></Button>
+                                    <Button variant="outline" asChild className="border-lunar-warm-latte text-lunar-deep-roast"><Link href={logout()} method="post" as="button">Log out</Link></Button>
+                                </div>
                             ) : auth.user ? (
-                                <Button variant="ghost" asChild className="text-lunar-deep-roast hover:bg-lunar-warm-latte-light"><a href="#order">Order Now</a></Button>
+                                <div className="flex items-center gap-2">
+                                    <Button variant="ghost" asChild className="text-lunar-deep-roast hover:bg-lunar-warm-latte-light"><a href="#order">Order Now</a></Button>
+                                    <Button variant="outline" asChild className="border-lunar-warm-latte text-lunar-deep-roast"><Link href={logout()} method="post" as="button">Log out</Link></Button>
+                                </div>
                             ) : (
                                 <>
-                                    <Button variant="ghost" asChild className="text-lunar-deep-roast hover:bg-lunar-warm-latte-light hover:text-accent"><Link href={login()}>Log in</Link></Button>
+                                    <Button variant="ghost" asChild className="text-lunar-deep-roast hover:bg-lunar-warm-latte-light"><Link href={login()}>Log in</Link></Button>
                                     {canRegister && <Button asChild className="text-white bg-lunar-deep-roast hover:bg-lunar-deep-roast-light"><Link href={register()}>Register</Link></Button>}
                                 </>
                             )}
@@ -182,9 +187,15 @@ export default function Welcome({ canRegister = true, products = [] }: { canRegi
                             <Separator className="bg-lunar-warm-latte" />
                             <div className="flex flex-col gap-2">
                                 {isAdmin ? (
-                                    <Button asChild className="w-full bg-lunar-deep-roast hover:bg-lunar-deep-roast-light"><Link href={dashboard()}>Dashboard</Link></Button>
+                                    <>
+                                        <Button asChild className="w-full bg-lunar-deep-roast hover:bg-lunar-deep-roast-light"><Link href={dashboard()}>Dashboard</Link></Button>
+                                        <Button variant="outline" asChild className="w-full border-lunar-warm-latte text-lunar-deep-roast"><Link href={logout()} method="post" as="button">Log out</Link></Button>
+                                    </>
                                 ) : auth.user ? (
-                                    <Button asChild className="w-full bg-lunar-deep-roast hover:bg-lunar-deep-roast-light"><a href="#order">Order Now</a></Button>
+                                    <>
+                                        <Button asChild className="w-full bg-lunar-deep-roast hover:bg-lunar-deep-roast-light"><a href="#order">Order Now</a></Button>
+                                        <Button variant="outline" asChild className="w-full border-lunar-warm-latte text-lunar-deep-roast"><Link href={logout()} method="post" as="button">Log out</Link></Button>
+                                    </>
                                 ) : (
                                     <>
                                         <Button variant="outline" asChild className="w-full border-lunar-warm-latte text-lunar-deep-roast"><Link href={login()}>Log in</Link></Button>
@@ -209,10 +220,10 @@ export default function Welcome({ canRegister = true, products = [] }: { canRegi
                             Savor the moment with hand-crafted coffee, warm pastries, and the gentle hum of a space designed for calm.
                         </p>
                         <div className="flex gap-4 justify-center lg:justify-start flex-wrap mb-10">
-                            <Button asChild size="lg" className="text-primary bg-lunar-deep-roast hover:bg-lunar-deep-roast-light px-8 text-[0.9375rem]">
+                            <Button asChild size="lg" className="text-white bg-lunar-deep-roast hover:bg-lunar-deep-roast-light px-8 text-[0.9375rem]">
                                 <a href="#menu">Explore Our Menu</a>
                             </Button>
-                            <Button variant="outline" asChild size="lg" className="text-primary border-primary bg-lunar-deep-roast hover:text-primary hover:bg-lunar-deep-roast-light px-8">
+                            <Button variant="outline" asChild size="lg" className="text-white border-primary bg-lunar-deep-roast px-8">
                                 <a href="#about">Our Story <ChevronDown className="size-4" /></a>
                             </Button>
                         </div>
@@ -319,8 +330,8 @@ export default function Welcome({ canRegister = true, products = [] }: { canRegi
                             {!auth.user ? (
                                 <div className="text-center">
                                     <div className="flex justify-center gap-4 flex-wrap">
-                                        <Button asChild size="lg" className="text-primary bg-lunar-deep-roast hover:bg-lunar-deep-roast-light px-8"><Link href={login()}>Log In</Link></Button>
-                                        {canRegister && <Button variant="outline" asChild size="lg" className="bg-lunar-deep-roast text-primary hover:bg-lunar-deep-roast-light px-8"><Link href={register()}>Register</Link></Button>}
+                                        <Button asChild size="lg" className="text-white bg-lunar-deep-roast hover:bg-lunar-deep-roast-light px-8"><Link href={login()}>Log In</Link></Button>
+                                        {canRegister && <Button variant="outline" asChild size="lg" className="text-white border-primary bg-lunar-deep-roast px-8"><Link href={register()}>Register</Link></Button>}
                                     </div>
                                 </div>
                             ) : (
@@ -354,7 +365,7 @@ export default function Welcome({ canRegister = true, products = [] }: { canRegi
                                                                 </button>
                                                             </div>
                                                         ) : (
-                                                            <Button size="sm" onClick={() => addToCart(product)} className="text-primary bg-lunar-deep-roast hover:bg-lunar-deep-roast-light text-xs px-4">
+                                                            <Button size="sm" onClick={() => addToCart(product)} className="text-white bg-lunar-deep-roast hover:bg-lunar-deep-roast-light text-xs px-4">
                                                                 <Plus className="size-3.5" /> Add
                                                             </Button>
                                                         )}
@@ -396,7 +407,7 @@ export default function Welcome({ canRegister = true, products = [] }: { canRegi
                                                         <span className="font-serif text-xl font-bold text-lunar-deep-roast">{formatRupiah(cartTotal)}</span>
                                                     </div>
                                                     {orderError && <p className="text-sm text-red-600 mb-3">{orderError}</p>}
-                                                    <Button onClick={placeOrder} disabled={orderLoading} className="w-full text-primary bg-lunar-deep-roast hover:bg-lunar-deep-roast-light text-base py-5">
+                                                    <Button onClick={placeOrder} disabled={orderLoading} className="w-full text-white bg-lunar-deep-roast hover:bg-lunar-deep-roast-light text-base py-5">
                                                         {orderLoading ? 'Placing Order...' : 'Place Order'}
                                                     </Button>
                                                 </CardContent>
