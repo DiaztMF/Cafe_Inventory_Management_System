@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TableOrderController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TransactionDetailController;
 use App\Models\Product;
@@ -25,6 +26,12 @@ Route::get('/', function () {
 
 Route::get('/api/menu', [OrderController::class, 'menu'])->name('menu');
 
+// Guest table ordering via QR code (no auth required)
+Route::get('/order/table/{tableNumber}', [TableOrderController::class, 'show'])->name('table.order');
+Route::post('/order/table/{tableNumber}', [TableOrderController::class, 'store'])->name('table.order.store');
+Route::get('/order/table/{tableNumber}/status/{transaction}', [TableOrderController::class, 'status'])->name('table.order.status');
+Route::post('/order/table/{tableNumber}/pay/{transaction}', [TableOrderController::class, 'pay'])->name('table.order.pay');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
     Route::get('/checkout/{transaction}', [OrderController::class, 'checkout'])->name('orders.checkout');
@@ -41,6 +48,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::inertia('products-page', 'products/index')->name('products.page');
     Route::inertia('transactions-page', 'transactions/index')->name('transactions.page');
     Route::inertia('orders-page', 'orders/index')->name('orders.page');
+    Route::inertia('qr-tables', 'qr-tables/index')->name('qr.tables');
 
     Route::resource('categories', CategoryController::class)->except('create', 'edit');
     Route::resource('products', ProductController::class)->except('create', 'edit');

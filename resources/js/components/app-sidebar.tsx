@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Boxes, LayoutGrid, Package, ReceiptText, Shapes, ShoppingBasket } from 'lucide-react';
+import { Boxes, LayoutGrid, Package, QrCode, ReceiptText, Shapes, ShoppingBasket } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -40,6 +40,11 @@ const mainNavItems: NavItem[] = [
         title: 'Transaksi',
         href: '/transactions-page',
         icon: ReceiptText,
+    },
+    {
+        title: 'QR Meja',
+        href: '/qr-tables',
+        icon: QrCode,
     },
 ];
 
