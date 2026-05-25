@@ -1,8 +1,8 @@
 <?php
 
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
-
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 test('admin can access dashboard', function () {
     $admin = User::factory()->admin()->create();
@@ -39,8 +39,8 @@ test('customer can view landing page with products', function () {
 
 test('customer can place an order', function () {
     $customer = User::factory()->create(['role' => 'customer']);
-    $category = \App\Models\Category::query()->create(['name' => 'Coffee', 'description' => 'Test']);
-    $product = \App\Models\Product::query()->create([
+    $category = Category::query()->create(['name' => 'Coffee', 'description' => 'Test']);
+    $product = Product::query()->create([
         'category_id' => $category->id,
         'name' => 'Test Latte',
         'price' => 30000,

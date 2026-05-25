@@ -41,11 +41,6 @@ const mainNavItems: NavItem[] = [
         href: '/transactions-page',
         icon: ReceiptText,
     },
-    {
-        title: 'Detail Transaksi',
-        href: '/transaction-details-page',
-        icon: Boxes,
-    },
 ];
 
 export function AppSidebar() {

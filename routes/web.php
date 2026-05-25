@@ -40,7 +40,6 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::inertia('categories-page', 'categories/index')->name('categories.page');
     Route::inertia('products-page', 'products/index')->name('products.page');
     Route::inertia('transactions-page', 'transactions/index')->name('transactions.page');
-    Route::inertia('transaction-details-page', 'transaction-details/index')->name('transaction-details.page');
     Route::inertia('orders-page', 'orders/index')->name('orders.page');
 
     Route::resource('categories', CategoryController::class)->except('create', 'edit');

@@ -24,7 +24,7 @@ class MidtransService
      */
     public function createSnapToken(Transaction $transaction): array
     {
-        $orderId = 'LUNAR-' . $transaction->id . '-' . time();
+        $orderId = 'LUNAR-'.$transaction->id.'-'.time();
 
         $transaction->update([
             'midtrans_order_id' => $orderId,

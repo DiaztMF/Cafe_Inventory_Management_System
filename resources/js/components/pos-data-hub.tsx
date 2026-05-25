@@ -245,12 +245,20 @@ export function PosDataHub() {
     }, []);
 
     const totalItemsSold = useMemo(
-        () => transactionDetails.reduce((sum, detail) => sum + detail.qty, 0),
-        [transactionDetails]
+        () => transactionDetails.reduce((sum, detail) => {
+            const transaction = transactions.find((t) => t.id === detail.transaction_id);
+            if (transaction && (transaction.status === 'completed' || transaction.status === 'paid')) {
+                return sum + detail.qty;
+            }
+            return sum;
+        }, 0),
+        [transactionDetails, transactions]
     );
 
     const totalRevenue = useMemo(
-        () => transactions.reduce((sum, transaction) => sum + transaction.total_price, 0),
+        () => transactions
+            .filter((t) => t.status === 'completed' || t.status === 'paid')
+            .reduce((sum, transaction) => sum + Number(transaction.total_price), 0),
         [transactions]
     );
 
